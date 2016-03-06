@@ -8,11 +8,12 @@ import edu.stanford.nlp.simple.Sentence;
 public class main {
 
 	public static void main(String[] args) {
+		
 		// 1. input list of email (in string format)
 		String[] emails = {
 			"Assignment 1 will be due on 3 March. Please ensure that you can finish.",
 			"REGISTER AT THE NIGHT (9PM)! (registration closes TODAY)",
-			"Hi Jack, I am Emily. Nice to meet you. Bye!",
+			"Hi Jack, I am Emily. Bill Gates will go to the library. See you then!",
 			"Nothing but a meeeeeeeess."
 		};
 		
@@ -26,6 +27,7 @@ public class main {
 	}
 	
 	private static ScoredEmail[] rank(String[] emails) {
+		
 		ScoredEmail[] res = new ScoredEmail[emails.length];
 		
 		// judge the urgency and importance of all the emails
@@ -43,41 +45,28 @@ public class main {
 	
 	private static double measureScore(String email) {
 		
-		// get dates from email
-		System.out.println(" ---- Dates ----");
-		List<String> dates = parse(email, "DATE");
-        for (String date: dates) {
-        	System.out.print(date + " ");
+		// Create a document. No computation is done yet.
+        Document doc = new Document(email);
+        for (Sentence sent : doc.sentences()) {  // Will iterate over two sentences
+            List<String> lemmas = sent.lemmas();
+            List<String> tags = sent.nerTags(); // named entity recognition
+            
+            System.out.println(" ---- Lemmas (Words in origin) ---- ");
+            for (String lemma: lemmas) {
+            	System.out.print(lemma+" ");
+            }
+            System.out.println();
+            
+            System.out.println(" ---- Tags ---- ");
+            for (String tag: tags) {
+            	System.out.print(tag+" ");
+            }
+            System.out.println();
         }
-        System.out.println();
         
-        // get persons from email
-        System.out.println(" ---- Persons ----");
-		List<String> persons = parse(email, "PERSON");
-        for (String person: persons) {
-        	System.out.print(person+ " ");
-        }
-        System.out.println();
+        // TODO: measure score (importance and urgency) of emails
+        // ... 
         
 		return 0.0;
 	}
-	
-	private static List<String> parse(String input, String type) {
-		List<String> res = new ArrayList<String>();
-		// Create a document. No computation is done yet.
-        Document doc = new Document(input);
-        for (Sentence sent : doc.sentences()) {  // Will iterate over two sentences
-//            List<String> lemmas = sent.lemmas();
-        	List<String> words = sent.words();
-            List<String> entities = sent.nerTags(); // named entity recognition
-            for (int i = 0; i < entities.size(); i++) {
-            	if (entities.get(i) == type) {
-//            		res.add(lemmas.get(i));
-            		res.add(words.get(i));
-            	}
-            }
-        }
-        return res;
-	}
-	
 }
