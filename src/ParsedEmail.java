@@ -1,21 +1,45 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
-public class ScoredEmail implements Comparable<ScoredEmail> {
+public class ParsedEmail implements Comparable<ParsedEmail> {
 	
-	public String email = "";
-	public double score = 0.0; 
+	private String text;
+	private ArrayList<String> dates; 
 	
-	public ScoredEmail(String email, double score) {
-		this.email = email;
-		this.score = score;
+	public ParsedEmail(String text, ArrayList<String> dates) {
+		this.text = text;
+		this.dates = dates;
+	}
+	
+	public void sortDates() {
+		Collections.sort(dates);
 	}
 
 	@Override
-	public int compareTo(ScoredEmail o) {
-		return score - o.score < 0? -1: 1;
+	public int compareTo(ParsedEmail o) {
+		
+		// TODO: rank by more complicated things
+		// ...
+		
+		// rank just by date
+		if (o.dates.isEmpty()) {
+			return 1;
+		}
+		if (dates.isEmpty()) {
+			return 1;
+		}
+		return dates.get(0).compareTo(o.dates.get(0));
 	}
-
-	@Override
-	public String toString() {
-		return email;
+	
+	public String getText() {
+		return text;
+	}
+	
+	public String getFirstDate() {
+		if (dates.isEmpty()) {
+			return "no date";
+		}
+		return dates.get(0);
 	}
 }
