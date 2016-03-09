@@ -123,7 +123,7 @@ public class main {
 			    
 			    // combine nearby nouns and name it keywords
 			    if (nouns.isEmpty()) {
-				    events.add(new Event("", dates.isEmpty()? "": dates.get(0), null));
+				    events.add(new Event("", dates.isEmpty()? "9999-99-99": dates.get(0), null));
 				    continue;
 			    }
 			    
@@ -133,7 +133,6 @@ public class main {
 			    	if (indices.get(j) + 1 == indices.get(j+1)) {
 			    		j++;
 			    	} else {
-//			    		System.out.println("add keyword");
 			    		String keyword = "";
 			    		for (int k = i; k <= j; k++) {
 			    			keyword += nouns.get(k);
@@ -149,7 +148,7 @@ public class main {
 	    		}
 	    		keywords.add(keyword);
 			    
-			    events.add(new Event("", dates.isEmpty()? "": dates.get(0), keywords));
+			    events.add(new Event("", dates.isEmpty()? "9999-99-99": dates.get(0), keywords));
 		    }
 		    
 		    // save result
