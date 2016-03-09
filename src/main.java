@@ -43,7 +43,7 @@ public class main {
 			"The deal will expire 2 hours later! (registration closes TODAY)",
 			"Nothing but a meeeeeeeess.",
 			"Assignment 1 will be due on 3 March. Please ensure that you can finish.",
-			"TEDxNorthwesternU 2016 is April 9, and the theme is “Beyond Boundaries.", 
+			"TEDxNorthwesternU 2016 is April 9, and the theme is “Beyond Boundaries.”", 
 		};
 		
 		// 2. rank the emails with respect of urgency and importance
@@ -51,7 +51,7 @@ public class main {
 		
 		// 3. output result
 		for (ParsedEmail email: rankedEmails) {
-			System.out.println(email.getText());
+			System.out.println(email.getText() + " --> " + email.getClosestEvent());
 		}
 	}
 	
@@ -95,17 +95,20 @@ public class main {
 		    	
 		    	// find all the nouns in the sentence except PERSON and DATE
 		    	ArrayList<String> nouns = new ArrayList<String>();
-		    	for (CoreLabel token: sentence.get(TokensAnnotation.class)) {
+		    	ArrayList<Integer> indices = new ArrayList<Integer>();
+		    	List<CoreLabel> tokens = sentence.get(TokensAnnotation.class);
+		    	for (int i = 0; i < tokens.size(); i++) {
+		    		CoreLabel token = tokens.get(i);
 		    		// this is the text of the token
 		    		String word = token.get(TextAnnotation.class);
 		    		// this is the POS tag of the token
 		    		String pos = token.get(PartOfSpeechAnnotation.class);
 		    		// this is the NER label of the token
 		    	    String ne = token.get(NamedEntityTagAnnotation.class);
-		    	    
-		    	    // find noun
-		    	    if (pos.contains("NN") && ne == "0") {
+		    	    // find nouns
+		    	    if (pos.contains("NN") && ne.equals("O")) {
 		    	    	nouns.add(word);
+		    	    	indices.add(i);
 		    	    }
 		    	}
 		    	
@@ -116,34 +119,44 @@ public class main {
 			    	String normalizedDate = cm.get(TimeExpression.Annotation.class).getTemporal().toString();
 			    	dates.add(normalizedDate);
 			    }
+			    Collections.sort(dates);
 			    
-			    if (dates.isEmpty()) {
-			    	continue;
+			    // combine nearby nouns and name it keywords
+			    if (nouns.isEmpty()) {
+				    events.add(new Event("", dates.isEmpty()? "": dates.get(0), null));
+				    continue;
 			    }
 			    
-			    // use opencyc to determine whether the nouns found
-			    String event = "";
-			    if (nouns.size() == 1) {
-			    	event = nouns.get(0);
-			    } else if (nouns.size() >= 2) {
-			    	
-			    	// TODO: if detect too many nouns, how to determine which should count as event
-			    	// ...
-			    	
-			    	for (String noun: nouns) {
-			    		event += noun;
+			    ArrayList<String> keywords = new ArrayList<String>();
+			    int i = 0, j = 0;
+			    while (j < nouns.size() - 1) {
+			    	if (indices.get(j) + 1 == indices.get(j+1)) {
+			    		j++;
+			    	} else {
+//			    		System.out.println("add keyword");
+			    		String keyword = "";
+			    		for (int k = i; k <= j; k++) {
+			    			keyword += nouns.get(k);
+			    		}
+			    		keywords.add(keyword);
+			    		j++;
+			    		i = j;
 			    	}
 			    }
+			    String keyword = "";
+	    		for (int k = i; k <= j; k++) {
+	    			keyword += nouns.get(k);
+	    		}
+	    		keywords.add(keyword);
 			    
-			    Collections.sort(dates);
-			    events.add(new Event(event, dates.get(0)));
+			    events.add(new Event("", dates.isEmpty()? "": dates.get(0), keywords));
 		    }
 		    
 		    // save result
+		    Collections.sort(events);
 		    parsedEmails.add(new ParsedEmail(email, events));
 	    }
     	
-		
 		// 3. Sort emails 
 		Collections.sort(parsedEmails);
 		
