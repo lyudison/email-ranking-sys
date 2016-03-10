@@ -51,7 +51,7 @@ public class main {
 		
 		// 3. output result
 		for (ParsedEmail email: rankedEmails) {
-			System.out.println(email.getText() + " --> " + email.getClosestEvent());
+			System.out.println(email.getText() + "\n --> " + email.getClosestEvent());
 		}
 	}
 	
@@ -117,38 +117,41 @@ public class main {
 			    ArrayList<String> dates = new ArrayList<String>();
 			    for (CoreMap cm : timexAnnsAll) {
 			    	String normalizedDate = cm.get(TimeExpression.Annotation.class).getTemporal().toString();
-			    	dates.add(normalizedDate);
+			    	dates.add(normalizedDate.substring(0, 10));
 			    }
 			    Collections.sort(dates);
 			    
-			    // combine nearby nouns and name it keywords
-			    if (nouns.isEmpty()) {
-				    events.add(new Event("", dates.isEmpty()? "9999-99-99": dates.get(0), null));
+			    // no useful information in the sentence
+			    if (nouns.isEmpty() && dates.isEmpty()) {
 				    continue;
 			    }
 			    
+			    // combine nearby nouns and name it keywords
 			    ArrayList<String> keywords = new ArrayList<String>();
-			    int i = 0, j = 0;
-			    while (j < nouns.size() - 1) {
-			    	if (indices.get(j) + 1 == indices.get(j+1)) {
-			    		j++;
-			    	} else {
-			    		String keyword = "";
-			    		for (int k = i; k <= j; k++) {
-			    			keyword += nouns.get(k);
-			    		}
-			    		keywords.add(keyword);
-			    		j++;
-			    		i = j;
-			    	}
+			    if (!nouns.isEmpty()) {
+			    	int i = 0, j = 0;
+				    while (j < nouns.size() - 1) {
+				    	if (indices.get(j) + 1 == indices.get(j+1)) {
+				    		j++;
+				    	} else {
+				    		String keyword = "";
+				    		for (int k = i; k <= j; k++) {
+				    			keyword += nouns.get(k);
+				    		}
+				    		keywords.add(keyword);
+				    		j++;
+				    		i = j;
+				    	}
+				    }
+				    String keyword = "";
+		    		for (int k = i; k <= j; k++) {
+		    			keyword += nouns.get(k);
+		    		}
+		    		keywords.add(keyword);
 			    }
-			    String keyword = "";
-	    		for (int k = i; k <= j; k++) {
-	    			keyword += nouns.get(k);
-	    		}
-	    		keywords.add(keyword);
 			    
-			    events.add(new Event("", dates.isEmpty()? "9999-99-99": dates.get(0), keywords));
+			    // add the event found in the sentence to the event list for current email
+			    events.add(new Event("", dates.isEmpty()? "9999-12-30": dates.get(0), keywords));
 		    }
 		    
 		    // save result
@@ -159,12 +162,15 @@ public class main {
     	// 3. Use OpenCyc to extract event name and type from keywords
     	for (ParsedEmail email: parsedEmails) {
     		for (Event event: email.getEvents()) {
+    			event.setTitle("unknown");
+				event.setType("unknown");
     			for (String keyword: event.getKeywords()) {
     				// use OpenCyc to get event type
     				String type = Reasoner.getEventType(keyword);
     				if (type != "unknown") {
     					event.setTitle(keyword);
-        				event.setType(type);
+    					event.setType(type);
+    					break;
     				}
     			}
     		}

@@ -39,7 +39,7 @@ public class Event implements Comparable<Event> {
 		for (String key: keywords) {
 			keyword += key + " ";
 		}
-		return "Event: " + title + "; Date: " + date + "; Keywords: " + keyword;
+		return "Event: " + title + "; Type:" + type + "; Date: " + date + "; Keywords: " + keyword;
 	}
 	
 	public void setType(String type) {
