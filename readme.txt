@@ -1,4 +1,4 @@
-Installation>
+Installation
 
 1. Download Stanford CoreNLP (for parsing word)
 
