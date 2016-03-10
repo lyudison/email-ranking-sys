@@ -52,9 +52,8 @@ public class Reasoner {
 	private static BinaryPredicate isa;
 
 	public static String getEventType(String word) throws KbTypeException, CreateException, QueryConstructionException, SessionCommunicationException, KbException {
-
-		// TODO: retrieve the type of event from OpenCyc
-		// ...
+		
+		// retrieve the type of event from OpenCyc
 		if(queryEvent(word,assignmentObligation)){
 			return "Assignment";
 		} else if(queryEvent(word,careerEvent)){
