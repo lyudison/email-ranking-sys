@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 import com.cyc.kb.BinaryPredicate;
 import com.cyc.kb.BinaryPredicateFactory;
 import com.cyc.kb.Context;
@@ -6,10 +8,11 @@ import com.cyc.kb.Fact;
 import com.cyc.kb.FactFactory;
 import com.cyc.kb.KbCollection;
 import com.cyc.kb.KbCollectionFactory;
-import com.cyc.kb.KbFactory.getSentence;
-import com.cyc.kb.KbFactory.getVariable;
 import com.cyc.kb.KbIndividual;
 import com.cyc.kb.KbIndividualFactory;
+import com.cyc.kb.KbFactory;
+import com.cyc.kb.exception.CreateException;
+import com.cyc.kb.exception.KbTypeException;
 import com.cyc.session.CycServerInfo;
 import com.cyc.session.CycSession;
 import com.cyc.session.CycSessionManager;
@@ -17,34 +20,30 @@ import com.cyc.session.SessionOptions;
 import com.cyc.session.exception.SessionCommandException;
 import com.cyc.session.exception.SessionCommunicationException;
 import com.cyc.session.exception.SessionConfigurationException;
-import com.cyc.session.exception.SessionException;
 import com.cyc.session.exception.SessionInitializationException;
 import com.cyc.session.spi.SessionManager;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
 
 public class Reasoner {
 
-	private Context universalVocabularyMt;
-	private Context universityDataMt;
+	private static Context universalVocabularyMt;
+	private static Context universityDataMt;
 
-	private KbCollection assignmentObligation;
-	private KbCollection homework;
-	private KbCollection project;
+	private static KbCollection assignmentObligation;
+	private static KbCollection homework;
+	private static KbCollection project;
 
-	private KbCollection event;
-	private KbCollection careerEvent;
-	private KbCollection careerFair;
-	private KbIndividual techExpo;
+	private static KbCollection event;
+	private static KbCollection careerEvent;
+	private static KbCollection careerFair;
+	private static KbIndividual techExpo;
 
-	private KbCollection breakfast;
-	private KbCollection lunch;
-	private KbCollection meal;
-	private KbCollection foodComposite;
-	private KbCollection food;
+	private static KbCollection breakfast;
+	private static KbCollection lunch;
+	private static KbCollection meal;
+	private static KbCollection foodComposite;
+	private static KbCollection food;
 
-	private BinaryPredicate genls;
+	private static BinaryPredicate genls;
 	
 	public static String getEventType(String word) {
 		
@@ -54,16 +53,11 @@ public class Reasoner {
 		return "unknown";
 	}
 
-	public static void SessionManager() {
+	public static void SessionManager() throws SessionConfigurationException, SessionCommunicationException, SessionInitializationException, SessionCommandException, KbTypeException, CreateException {
 
-		try (Sessionmanager sessionMgr = CycSessionManager.getInstance()) {
+		try (SessionManager sessionMgr = CycSessionManager.getInstance()) {
 
-			CreateEventInKB();
-
-		} catch (KbException | QueryException | SessionException | RuntimeException kbe) {
-
-			kbe.printStackTrace(System.err);
-			System.exit(1);
+			CreateEventIntoKB();
 
 		} catch (IOException ioe) {
 
@@ -76,9 +70,9 @@ public class Reasoner {
 		}
 	}
 
-	private void CreateEventIntoKB() {
+	private static void CreateEventIntoKB() throws SessionConfigurationException, SessionCommunicationException, SessionInitializationException, SessionCommandException, KbTypeException, CreateException {
 
-		try (CycSession session = CycSessionmanager.getCurrentSession()) {
+		try (CycSession session = CycSessionManager.getCurrentSession()) {
 
 			ConfigureCurrentSession();
 
@@ -91,7 +85,7 @@ public class Reasoner {
 		}
 	}
 
-	private void ConfigureCurrentSession()
+	private static void ConfigureCurrentSession()
 
 			throws SessionConfigurationException, SessionCommunicationException, SessionInitializationException,
 			SessionCommandException, KbTypeException, CreateException {
@@ -103,14 +97,14 @@ public class Reasoner {
 		System.out.println("Cyc server release type: " + serverInfo.getSystemReleaseType());
 		System.out.println("Cyc server revision number:" + serverInfo.getCycRevisionString());
 
-		SessionOption option = Session.getOptions();
+		SessionOptions options = session.getOptions();
 
 		options.setShouldTranscriptOperations(true);
 
-		options.setCyclistname("CycAdministrator");
+		options.setCyclistName("CycAdministrator");
 	}
 
-	private void SetupContexts()
+	private static void SetupContexts()
 
 			throws KbTypeException, CreateException, SessionConfigurationException, SessionCommunicationException,
 			SessionInitializationException {
@@ -123,7 +117,7 @@ public class Reasoner {
 				.setDefaultContext(ContextFactory.getDefaultContext(universityDataMt, ContextFactory.INFERENCE_PSC));
 	}
 
-	private void CreateEvent() {
+	private static void CreateEvent() throws CreateException, KbTypeException {
 
 		CreateAssignmentRelatedEvent();
 
@@ -133,18 +127,18 @@ public class Reasoner {
 
 	}
 
-	private void CreateAssignmentRelatedEvent()
+	private static void CreateAssignmentRelatedEvent()
 
-			throws CreationException, KbTypeException {
+			throws CreateException, KbTypeException {
 
 		assignmentObligation = KbCollectionFactory.get("Assignment-Obligation");
 		project = KbCollectionFactory.get("Factory");
 		homework = KbCollectionFactory.findOrCreate("Homework");
 
 		genls = BinaryPredicateFactory.get("genls");
-		Fact projectIsObliged = FactFactory.findOrCreate(getSentence(genls, project, assignmentObligation),
+		Fact projectIsObliged = FactFactory.findOrCreate(KbFactory.getSentence(genls, project, assignmentObligation),
 				universityDataMt);
-		Fact homeworkIsObliged = FactFactory.findOrCreate(getSentence(genls, homework, assignmentObligation),
+		Fact homeworkIsObliged = FactFactory.findOrCreate(KbFactory.getSentence(genls, homework, assignmentObligation),
 				universityDataMt);
 
 		// Add individual into homework or project collection
@@ -152,17 +146,17 @@ public class Reasoner {
 		// eecs340-project1.instantiate(project,universityDataMt);
 	}
 
-	private void CreateCareerRelatedEvent()
+	private static void CreateCareerRelatedEvent()
 
-			throws CreationException, KbTypeException {
+			throws CreateException, KbTypeException {
 
 		event = KbCollectionFactory.get("Event");
 
 		careerEvent = KbCollectionFactory.findOrCreate("CareerEvent");
-		Fact careerEventisAnEvent = FactFactory.findOrCreate(getSentence(genls, careerEvent, Event), universityDataMt);
+		Fact careerEventisAnEvent = FactFactory.findOrCreate(KbFactory.getSentence(genls, careerEvent, event), universityDataMt);
 
 		careerFair = KbCollectionFactory.findOrCreate("CareerFair");
-		Fact careerFairisACareerEvent = FactFactory.findOrCreate(getSentence(genls, careerFair, careerEvent),
+		Fact careerFairisACareerEvent = FactFactory.findOrCreate(KbFactory.getSentence(genls, careerFair, careerEvent),
 				universityDataMt);
 
 		// Add individual into career fair collection
@@ -170,11 +164,9 @@ public class Reasoner {
 		techExpo.instantiates(careerFair, universityDataMt);
 	}
 
-}
+	private static void CreateFoodRelatedEvent()
 
-	private void CreateFoodRelatedEvent()
-
-			throws CreationException, KbTypeException {
+			throws CreateException, KbTypeException {
 
 		breakfast = KbCollectionFactory.get("BreakFast");
 		lunch = KbCollectionFactory.get("Lunch");

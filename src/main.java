@@ -156,15 +156,16 @@ public class main {
 		    parsedEmails.add(new ParsedEmail(email, events));
 	    }
     	
-    	// TODO: 3. Use OpenCyc to extract event name and type from keywords
-    	// ...
+    	// 3. Use OpenCyc to extract event name and type from keywords
     	for (ParsedEmail email: parsedEmails) {
     		for (Event event: email.getEvents()) {
     			for (String keyword: event.getKeywords()) {
     				// use OpenCyc to get event type
     				String type = Reasoner.getEventType(keyword);
-    				event.setType(type);
-    				event.setTitle(keyword);
+    				if (type != "unknown") {
+    					event.setTitle(keyword);
+        				event.setType(type);
+    				}
     			}
     		}
     	}

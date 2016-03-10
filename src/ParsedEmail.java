@@ -4,8 +4,8 @@ import java.util.Comparator;
 
 public class ParsedEmail implements Comparable<ParsedEmail> {
 	
-	private String text; // content of email
-	private ArrayList<Event> events; 
+	private String text = ""; // content of email
+	private ArrayList<Event> events = null; 
 	
 	public ParsedEmail(String text, ArrayList<Event> events) {
 		this.text = text;
