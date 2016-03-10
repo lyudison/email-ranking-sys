@@ -49,7 +49,7 @@ public class Reasoner {
 	private static BinaryPredicate genls;
 	private static BinaryPredicate isa;
 
-	public static String getEventType(String word) {
+	public static String getEventType(String word) throws KbTypeException, CreateException, QueryConstructionException, SessionCommunicationException, KbException {
 
 		// TODO: retrieve the type of event from OpenCyc
 		// ...
