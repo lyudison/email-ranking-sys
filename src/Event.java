@@ -4,6 +4,7 @@ public class Event implements Comparable<Event> {
 
 	private String title; // can be empty
 	private String date; // can be empty
+	private String type; // can be empty
 	private ArrayList<String> keywords;
 	
 	public Event(String title, String date, ArrayList<String> keywords) {
@@ -14,6 +15,10 @@ public class Event implements Comparable<Event> {
 	
 	public String getTitle() {
 		return title;
+	}
+	
+	public void setTitle(String title) {
+		this.title = title;
 	}
 	
 	public String getDate() {
@@ -35,5 +40,13 @@ public class Event implements Comparable<Event> {
 			keyword += key + " ";
 		}
 		return "Event: " + title + "; Date: " + date + "; Keywords: " + keyword;
+	}
+	
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	public String getType() {
+		return type;
 	}
 }

@@ -36,4 +36,8 @@ public class ParsedEmail implements Comparable<ParsedEmail> {
 		}
 		return events.get(0);
 	}
+	
+	public ArrayList<Event> getEvents() {
+		return events;
+	}
 }
