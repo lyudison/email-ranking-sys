@@ -14,4 +14,4 @@ download from official website
 
 3. Set environment variable
 
-Add all jar lib from both Stanford CoreNLP and Cyc Core API Suite to the 'lib' folder of project (If do not have 'lib', then new one.)
+Add all jar lib from both Stanford CoreNLP and Cyc Core API Suite to the 'lib' folder of project (If do not have 'lib', new one first.)
