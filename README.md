@@ -8,8 +8,7 @@ download from official website
 1. JDK 1.7 or greater to build; code can be run on Java 6.
 2. Apache Maven, version 3.2 or higher. 
 3. The following Cyc server releases are supported:
-1. ResearchCyc 4.0q or higher. Requires server code patching.
-2. EnterpriseCyc 1.7-preview or higher. Requires server code patching.
-
-<h1>Set environment variable</h1>
+ 1. ResearchCyc 4.0q or higher. Requires server code patching.
+ 2. EnterpriseCyc 1.7-preview or higher. Requires server code patching.
+<h2>Set environment variable</h2>
 Add all jar lib from both Stanford CoreNLP and Cyc Core API Suite to the 'lib' folder of project (If do not have 'lib', then new one.)
