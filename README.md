@@ -1,11 +1,11 @@
 ## Description 
+The Email Ranking System can rank list of emails with respect to their event type and date. 
 
-The project requires 3rd party API 'Stanford Core NLP'. Because the 'Stanford Core NLP' is too big to be uploaded here. You have to copy the .jar libs from 'Stanford Core NLP' root folder to the lib folder in this Java project.  
 ## Installation
 
 ### Download Stanford CoreNLP (for parsing word)
 
-download from official website
+please download from official website http://stanfordnlp.github.io/CoreNLP/api.html (since it is too big)
 
 ### Download Cyc Core API Suite (for reasoning)
 
@@ -14,6 +14,7 @@ download from official website
   3. The following Cyc server releases are supported:
    1. ResearchCyc 4.0q or higher. Requires server code patching.
    2. EnterpriseCyc 1.7-preview or higher. Requires server code patching.
+Please download from their official website http://opencyc.org/
 
 ### Set environment variable
 
