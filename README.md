@@ -5,7 +5,7 @@ The Email Ranking System can rank list of emails with respect to their event typ
 
 ### Download Stanford CoreNLP (for parsing word)
 
-please download from [their official website](http://stanfordnlp.github.io/CoreNLP/api.html)(since it is too big)
+please download from [their official website](http://stanfordnlp.github.io/CoreNLP/api.html) (since it is too big)
 
 ### Download Cyc Core API Suite (for reasoning)
 
@@ -14,7 +14,7 @@ please download from [their official website](http://stanfordnlp.github.io/CoreN
   3. The following Cyc server releases are supported:
    1. ResearchCyc 4.0q or higher. Requires server code patching.
    2. EnterpriseCyc 1.7-preview or higher. Requires server code patching.
-Please download from [their official website ](http://opencyc.org/)
+    Please download from [their official website ](http://opencyc.org/)
 
 ### Set environment variable
 
