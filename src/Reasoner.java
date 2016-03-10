@@ -11,11 +11,13 @@ import com.cyc.kb.KbCollectionFactory;
 import com.cyc.kb.KbIndividual;
 import com.cyc.kb.KbIndividualFactory;
 import com.cyc.kb.Sentence;
+import com.cyc.kb.SentenceFactory;
 import com.cyc.kb.KbFactory;
 import com.cyc.kb.exception.CreateException;
 import com.cyc.kb.exception.KbException;
 import com.cyc.kb.exception.KbTypeException;
 import com.cyc.query.Query;
+import com.cyc.query.QueryFactory;
 import com.cyc.query.exception.QueryConstructionException;
 import com.cyc.session.CycServerInfo;
 import com.cyc.session.CycSession;
@@ -212,9 +214,9 @@ public class Reasoner {
 		KbIndividual informationSession=KbIndividualFactory.findOrCreate("InformationSession");
 		informationSession.instantiates(careerFair, universityDataMt);
 
-		KbIndividual linkedInforMasters;
-		StudentsWorkshop = KbIndividualFactory.findOrCreate("LinkedInforMaster'sStudentsWorkshop");
-		linkedInforMasters = StudentsWorkshop.instantiates(careerFair, universityDataMt);
+		KbIndividual linkedInWorkshop;
+		linkedInWorkshop = KbIndividualFactory.findOrCreate("LinkedInforMaster'sStudentsWorkshop");
+		linkedInWorkshop.instantiates(careerFair, universityDataMt);
 
 		KbIndividual intelligenceCommunityVirtualCareerFair=KbIndividualFactory.findOrCreate("IntelligenceCommunityVirtualCareerFair");
 		intelligenceCommunityVirtualCareerFair.instantiates(careerFair, universityDataMt);
