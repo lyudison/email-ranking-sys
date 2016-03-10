@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
@@ -33,8 +34,20 @@ import edu.stanford.nlp.util.CoreMap;
 
 public class main {
 
+	public static HashMap<String, Double> importance;
+
 	public static void main(String[] args) throws ClassNotFoundException, IOException {
 		
+		// 0. initialization
+		// setup importance
+		importance = new HashMap<String, Double>()
+		{{
+		     put("Assignment-Obligation", 1.0);
+		     put("CareerEvent", 0.7);
+		     put("Meal", 0.2);
+		     put("unknown", 0.0);
+		}};
+
 		// 1. input list of email (in string format)
 		String[] emails = {
 			"His talk is scheduled for this Thursday, March 10th at 12:30 PM in Annenberg 303.",
@@ -151,7 +164,7 @@ public class main {
 			    }
 			    
 			    // add the event found in the sentence to the event list for current email
-			    events.add(new Event("", dates.isEmpty()? "9999-12-30": dates.get(0), keywords));
+			    events.add(new Event("", dates.isEmpty()? "": dates.get(0), keywords));
 		    }
 		    
 		    // save result

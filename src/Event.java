@@ -31,7 +31,15 @@ public class Event implements Comparable<Event> {
 
 	@Override
 	public int compareTo(Event o) {
-		return date.compareTo(o.date);
+		String d1 = "9999-99-99";
+		String d2 = "9999-99-99";
+		if (date != "") {
+			d1 = date;
+		}
+		if (o.date != "") {
+			d2 = o.date;
+		}
+		return d1.compareTo(d2);
 	}
 	
 	public String toString() {
