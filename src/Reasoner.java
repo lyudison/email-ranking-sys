@@ -88,7 +88,7 @@ public class Reasoner {
 		}
 
 		KbCollection wordCollection = KbCollectionFactory.findOrCreate(word);
-		Sentence querySentence2 = getSentence(genls, word, collection);
+		Sentence querySentence2 = KbFactory.getSentence(genls, word, collection);
 		boolean isTrue2;
 		try (Query query = getQuery(querySentence2,ContextFactory.INFERENCE_PSC)) {
 			query.setMaxAnswerCount(1)

@@ -9,6 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
+import com.cyc.kb.exception.CreateException;
+import com.cyc.kb.exception.KbException;
+import com.cyc.kb.exception.KbTypeException;
+import com.cyc.query.exception.QueryConstructionException;
+import com.cyc.session.exception.SessionCommunicationException;
+
 import edu.stanford.nlp.ie.NERClassifierCombiner;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreAnnotations.NamedEntityTagAnnotation;
@@ -36,7 +42,7 @@ public class main {
 
 	public static HashMap<String, Double> importance;
 
-	public static void main(String[] args) throws ClassNotFoundException, IOException {
+	public static void main(String[] args) throws ClassNotFoundException, IOException, KbTypeException, CreateException, QueryConstructionException, SessionCommunicationException, KbException {
 		
 		// 0. initialization
 		// setup importance
@@ -68,7 +74,7 @@ public class main {
 		}
 	}
 	
-	private static ArrayList<ParsedEmail> rank(String[] emails) throws ClassNotFoundException, IOException {
+	private static ArrayList<ParsedEmail> rank(String[] emails) throws ClassNotFoundException, IOException, KbTypeException, CreateException, QueryConstructionException, SessionCommunicationException, KbException {
 		
 		// 1. Extract dates and corresponding event of all the emails
 		
