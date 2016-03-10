@@ -10,13 +10,19 @@ import com.cyc.kb.KbCollection;
 import com.cyc.kb.KbCollectionFactory;
 import com.cyc.kb.KbIndividual;
 import com.cyc.kb.KbIndividualFactory;
-import com.cyc.kb.Sentence;
 import com.cyc.kb.KbFactory;
 import com.cyc.kb.exception.CreateException;
-import com.cyc.kb.exception.KbException;
 import com.cyc.kb.exception.KbTypeException;
+import com.cyc.query.InferenceStatus;
+import com.cyc.query.InferenceSuspendReason;
 import com.cyc.query.Query;
+import com.cyc.query.QueryAnswer;
+import com.cyc.query.QueryFactory;
+import static com.cyc.query.QueryFactory.getQuery;
+import com.cyc.query.QueryListener;
+import com.cyc.query.QueryResultSet;
 import com.cyc.query.exception.QueryConstructionException;
+import com.cyc.query.exception.QueryException;
 import com.cyc.session.CycServerInfo;
 import com.cyc.session.CycSession;
 import com.cyc.session.CycSessionManager;
@@ -47,56 +53,54 @@ public class Reasoner {
 	private static KbCollection food;
 
 	private static BinaryPredicate genls;
-	private static BinaryPredicate isa;
-
+        private static BinaryPredicate isa;
+	
 	public static String getEventType(String word) {
-
+		
 		// TODO: retrieve the type of event from OpenCyc
 		// ...
 		if(queryEvent(word,assignmentObligation)){
-			return "Assignment";
-		} else if(queryEvent(word,careerEvent)){
-			return "Career";
-		} else if(queryEvent(word,food)){
-			return "Food";
-		} else if(queryEvent(word,meal)){
-			return "Food";
-		} else if(queryEvent(word,breakfast)){
-			return "Food";
-		} else if(queryEvent(word,foodComposite)){
-			return "Food";
-		} else if(queryEvent(word,lunch)){
-			return "Food";
-		} else{
-			return "unknown";
-		}
+                     return "Assignment";
+                }else if(queryEvent(word,careerEvent)){
+                     return "Career";
+                }else if(queryEvent(word,food)){
+                     return "Food";
+                }else if(queryEvent(word,meal)){
+                     return "Food";
+                }else if(queryEvent(word,breakfast)){
+                     return "Food";
+                }else if(queryEvent(word,foodComposite)){
+                     return "Food";
+                }else if(queryEvent(word,lunch)){
+                     return "Food";
+                }else{
+		     return "unknown";
+                }
 	}
 
-	public static Boolean queryEvent(String word, KbCollection collection) throws KbTypeException, CreateException, QueryConstructionException, 
-	SessionCommunicationException, KbException{
+        public static bool queryEvent(String word, KbCollection collection)  KbTypeException, CreateException, QueryConstructionException, 
+          SessionCommunicationException, KbException{
 
-		KbIndividual wordIndividual = KbIndividualFactory.findOrCreate(word);
-		Sentence querySentence1 = KbFactory.getSentence(isa, wordIndividual, collection);
-		boolean isTrue1;
-		try (Query query = getQuery(querySentence1,ContextFactory.INFERENCE_PSC)) {
-			query.setMaxAnswerCount(1)
-			.setMaxTime(2)
-			.setBrowsable(true);
-			isTrue1 = query.isTrue();
-		}
+               KbIndividual KbIndividualFactory.findOrCreate(word);
+               Sentence querySentence1=getSentence(isa, word, collection);
+               try (Query query=getQuery(querySentence1,ContextFactory.INFERENCE_PSC)) {
+                    query.setMaxAnswer(1)
+                         .setMaxTime(2)
+                         .setBrowsable(true);
+               }
+               bool isTrue1=query.isTrue();
 
-		KbCollection wordCollection = KbCollectionFactory.findOrCreate(word);
-		Sentence querySentence2 = getSentence(genls, word, collection);
-		boolean isTrue2;
-		try (Query query = getQuery(querySentence2,ContextFactory.INFERENCE_PSC)) {
-			query.setMaxAnswerCount(1)
-			.setMaxTime(2)
-			.setBrowsable(true);
-			isTrue2 = query.isTrue();
-		}
+               KbCollection KbCollectionFactory.findOrCreate(word);
+               Sentence querySentence2=getSentence(genls, word, collection);
+               try (Query query=getQuery(querySentence2,ContextFactory.INFERENCE_PSC)) {
+                    query.setMaxAnswer(1)
+                         .setMaxTime(2)
+                         .setBrowsable(true);
+               }
+               bool isTrue2=query.isTrue();
 
-		return isTrue1||isTrue2;
-	}
+               return isTrue1||isTrue2;
+        }
 
 	public static void SessionManager() throws SessionConfigurationException, SessionCommunicationException, SessionInitializationException, SessionCommandException, KbTypeException, CreateException {
 
@@ -159,12 +163,12 @@ public class Reasoner {
 		universityDataMt = ContextFactory.get("UniversityDataMt");
 
 		CycSessionManager.getCurrentSession().getOptions()
-		.setDefaultContext(ContextFactory.getDefaultContext(universityDataMt, ContextFactory.INFERENCE_PSC));
+				.setDefaultContext(ContextFactory.getDefaultContext(universityDataMt, ContextFactory.INFERENCE_PSC));
 	}
 
 	private static void CreateEvent() throws CreateException, KbTypeException {
 
-		isa = BinaryPredicateFactory.get("isa");
+                isa = BinaryPredicateFactory.get("isa");
 
 		CreateAssignmentRelatedEvent();
 
@@ -206,18 +210,17 @@ public class Reasoner {
 		KbIndividual techExpo = KbIndividualFactory.findOrCreate("TechExpo");
 		techExpo.instantiates(careerFair, universityDataMt);
 
-		KbIndividual stemCareerWorkshop=KbIndividualFactory.findOrCreate("StemCareerWorkshop");
-		stemCareerWorkshop.instantiates(careerFair, universityDataMt);
+                KbIndividual stemCareerWorkshop=KbIndividualFactory.findOrCreate("StemCareerWorkshop");
+                stemCareerWorkshop.instantiates(careerFair, universityDataMt);
 
-		KbIndividual informationSession=KbIndividualFactory.findOrCreate("InformationSession");
-		informationSession.instantiates(careerFair, universityDataMt);
+                KbIndividual informationSession=KbIndividualFactory.findOrCreate("InformationSession");
+                informationSession.instantiates(careerFair, universityDataMt);
 
-		KbIndividual linkedInforMasters;
-		StudentsWorkshop = KbIndividualFactory.findOrCreate("LinkedInforMaster'sStudentsWorkshop");
-		linkedInforMasters = StudentsWorkshop.instantiates(careerFair, universityDataMt);
+                KbIndividual linkedInforMaster'sStudentsWorkshop=KbIndividualFactory.findOrCreate("LinkedInforMaster'sStudentsWorkshop");
+                linkedInforMaster'sStudentsWorkshop.instantiates(careerFair, universityDataMt);
 
-		KbIndividual intelligenceCommunityVirtualCareerFair=KbIndividualFactory.findOrCreate("IntelligenceCommunityVirtualCareerFair");
-		intelligenceCommunityVirtualCareerFair.instantiates(careerFair, universityDataMt);
+                KbIndividual intelligenceCommunityVirtualCareerFair=KbIndividualFactory.findOrCreate("IntelligenceCommunityVirtualCareerFair");
+                intelligenceCommunityVirtualCareerFair.instantiates(careerFair, universityDataMt);
 	}
 
 	private static void CreateFoodRelatedEvent()
